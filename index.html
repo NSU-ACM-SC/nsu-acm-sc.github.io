@@ -1,0 +1,647 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PROTOCOL: Technovation 3.0 — Web Team</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Inter:wght@400;500;600;700;900&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  /* Valorant Palette */
+  --val-red:    #ff4655;
+  --val-dark:   #0f1923;
+  --val-black:  #111111;
+  --val-light:  #ece8e1;
+  --val-grey:   #1f2326;
+  --val-muted:  #8b978f;
+  --radianite:  #00ffcc; 
+  
+  /* Blended Fonts */
+  --font-header: 'Trajan Pro', 'Cinzel', serif; /* Game of Thrones Headers */
+  --font-serif:  'Newsreader', 'Charter', Georgia, serif; /* Claude Reading Text */
+  --font-sans:   'Inter', system-ui, sans-serif; /* Claude UI Text */
+  --font-mono:   'JetBrains Mono', monospace; /* Tactical Code */
+}
+
+html { 
+  scroll-behavior: smooth; 
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--val-dark);
+  color: var(--val-light);
+  margin: 0;
+  overflow-x: hidden;
+}
+
+/* --- TACTICAL GRID BACKGROUND --- */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background-image: 
+    linear-gradient(rgba(236, 232, 225, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(236, 232, 225, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
+/* --- RADIANITE CUBE PARTICLES --- */
+.radianite-particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.cube {
+  position: absolute; bottom: -50px;
+  background: rgba(0, 255, 204, 0.1);
+  border: 1px solid rgba(0, 255, 204, 0.3);
+  box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
+  animation: float-up linear infinite; 
+}
+@keyframes float-up {
+  0%   { transform: translateX(0) translateY(0) scale(0.5) rotate(0deg); opacity: 0; }
+  20%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translateX(var(--dx)) translateY(-100vh) scale(1.5) rotate(360deg); opacity: 0; }
+}
+
+/* --- 2-PAGE SCROLL SNAP LAYOUT --- */
+.wrapper {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  position: relative;
+  z-index: 1;
+}
+
+.page-section {
+  min-height: 100vh;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  position: relative;
+}
+
+.container { max-width: 1200px; width: 100%; margin: 0 auto; }
+
+/* --- TYPOGRAPHY & HEADERS --- */
+h1, h2, h3, h4 { font-family: var(--font-header); }
+
+.hero { text-align: center; margin-bottom: 30px; }
+.hero-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 70px; height: 70px;
+  background: var(--val-red);
+  color: var(--val-light);
+  font-size: 32px; font-weight: 900;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); 
+  margin-bottom: 20px;
+  animation: pulse-red 2s infinite alternate;
+}
+@keyframes pulse-red {
+  0% { box-shadow: 0 0 0 0 rgba(255, 70, 85, 0.7); }
+  100% { box-shadow: 0 0 20px 10px rgba(255, 70, 85, 0); }
+}
+
+.scroll-tag {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.15em;
+  color: var(--val-red); margin-bottom: 10px; display: block;
+  text-transform: uppercase; font-weight: 700;
+}
+.hero h1 {
+  font-family: var(--font-header);
+  font-size: clamp(36px, 6vw, 72px); line-height: 1;
+  color: var(--val-light); margin-bottom: 20px;
+  font-weight: 900; letter-spacing: -0.04em; text-transform: uppercase;
+}
+.hero h1 em {
+  font-style: normal; color: var(--val-red);
+}
+.hero-lore {
+  font-family: var(--font-serif); font-size: 19px; color: #cbd5e1; 
+  max-width: 650px; margin: 0 auto; line-height: 1.5; font-weight: 400;
+}
+
+.section-title {
+  font-family: var(--font-header); font-size: 22px; letter-spacing: 0.1em; 
+  color: var(--val-light); text-transform: uppercase; font-weight: 700;
+  border-bottom: 2px solid var(--val-red);
+  padding-bottom: 8px; margin-bottom: 25px; display: inline-block;
+}
+
+/* --- CARDS & GRIDS --- */
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; width: 100%; align-items: start; }
+.grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; width: 100%; }
+
+.agent-card {
+  background: var(--val-grey);
+  padding: 25px 20px;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%);
+  border-left: 4px solid transparent;
+}
+.agent-card::before {
+  content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(45deg, transparent 95%, rgba(255, 70, 85, 0.2) 100%);
+  pointer-events: none; opacity: 0; transition: opacity 0.3s;
+}
+.agent-card:hover {
+  background: #2a2e33;
+  border-left: 4px solid var(--val-red);
+  transform: translateY(-5px);
+}
+.agent-card:hover::before { opacity: 1; }
+
+.role-class { font-family: var(--font-mono); font-size: 11px; color: var(--val-red); margin-bottom: 5px; text-transform: uppercase; }
+.role-name { font-family: var(--font-header); font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 10px; text-transform: uppercase; }
+.role-stack { font-size: 14px; color: var(--val-muted); line-height: 1.5; font-family: var(--font-serif); } 
+
+/* --- RESPONSIBILITIES & ELIGIBILITY LIST --- */
+.resp-list {
+  list-style: none;
+  width: 100%;
+  text-align: left;
+}
+.resp-list li {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  color: var(--val-light);
+  margin-bottom: 15px;
+  padding-left: 25px;
+  position: relative;
+  line-height: 1.5;
+}
+.resp-list li::before {
+  content: '■';
+  color: var(--val-red);
+  position: absolute;
+  left: 0;
+  top: 3px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.resp-list strong {
+  font-family: var(--font-sans);
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-right: 5px;
+}
+
+/* --- CTA BUTTON --- */
+.btn-apply {
+  display: inline-block;
+  background: var(--val-light); color: var(--val-dark);
+  font-family: var(--font-header); font-size: 18px; font-weight: 900;
+  padding: 16px 45px; text-decoration: none; text-transform: uppercase;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+  transition: all 0.3s ease; position: relative; margin-top: 10px;
+}
+.btn-apply::before {
+  content: ''; position: absolute; inset: 0; background: var(--val-red); z-index: -1;
+  transform: scaleY(0); transform-origin: bottom; transition: transform 0.3s ease;
+}
+.btn-apply:hover { color: var(--val-light); }
+.btn-apply:hover::before { transform: scaleY(1); }
+
+.scroll-indicator {
+  position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+  animation: float 2s infinite ease-in-out; color: var(--val-muted); font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
+}
+@keyframes float { 0%, 100% { transform: translate(-50%, 0); opacity: 0.5; } 50% { transform: translate(-50%, 8px); opacity: 1; } }
+
+</style>
+</head>
+<body>
+
+<div class="radianite-particles" id="particles"></div>
+
+<div class="wrapper">
+  
+  <section class="page-section">
+    <div class="container">
+      <div class="hero">
+        <div class="hero-icon">✦</div>
+        <span class="scroll-tag">NSU ACM SC // PROTOCOL 03</span>
+        <h1>Call For<br/><em>Technovation 3.0<br/></em>Web Team</h1>
+        <p class="hero-lore">We are assembling an elite roster of Agents to build, design, and dominate the digital battlefield. Technovation 3.0 is calling — claim your role.</p>
+      </div>
+
+      <div style="text-align: center;"><h2 class="section-title">Available Positions</h2></div>
+      <div class="grid-4">
+        <div class="agent-card">
+          <div class="role-class">// Initiator</div>
+          <div class="role-name">Frontend Developer</div>
+          <div class="role-stack">Next.js · Tailwind CSS · Framer Motion</div>
+        </div>
+        <div class="agent-card">
+          <div class="role-class">// Controller</div>
+          <div class="role-name">Backend Developer</div>
+          <div class="role-stack">Node.js · Express · MySQL · APIs</div>
+        </div>
+        <div class="agent-card">
+          <div class="role-class">// Duelist</div>
+          <div class="role-name">Full-Stack Developer</div>
+          <div class="role-stack">End-to-end feature execution & fragging</div>
+        </div>
+        <div class="agent-card">
+          <div class="role-class">// Sentinel</div>
+          <div class="role-name">DevOps Engineer</div>
+          <div class="role-stack">VPS · SSL · CI/CD Pipelines</div>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-indicator">SCROLL TO APPLICATION ▼</div>
+  </section>
+
+  <section class="page-section">
+    <div class="container">
+      
+      <div class="grid-2">
+        <div>
+          <h2 class="section-title">Eligibility Criteria</h2>
+          <ul class="resp-list">
+            <li>Must be a current, active NSU ACM Student Chapter Member</li>
+            <li>Proficiency in at least one basic programming language — C/C++, Java, Python, or C#</li>
+            <li>Familiar with core Git commands (clone, push, pull, commit, branch, merge)</li>
+            <li>Experience with GitHub repository collaboration (pull requests, code reviews, branching workflow)</li>
+            <li>Ability to Vibe Code with Prompt Engineering to work alongside AI tools (e.g., ChatGPT, Claude, Gemini, Copilot)</li>
+          </ul>
+        </div>
+
+        <div>
+          <h2 class="section-title">Job Responsibilities</h2>
+          <ul class="resp-list">
+            <li><strong>Building and structuring web pages —</strong> Implement the HTML structure for all assigned pages (Landing, HackNSU, IUPC, Gaming, Hour of Code, and About Us) following the site architecture and navigation layout defined in the SRS.</li>
+            <li><strong>Responsive UI development —</strong> Write clean, mobile-first CSS using Tailwind to ensure the website renders consistently across all screen sizes from 320px to 1920px, covering desktop, tablet, and mobile devices.</li>
+            <li><strong>Integrating content and assets —</strong> Embed provided content such as event schedules, prize breakdowns, team photos, sponsor logos, and external links (PDFs, Google Forms) into the appropriate page sections once approved by the Project Lead.</li>
+            <li><strong>Implementing animations and visual effects —</strong> Apply lightweight scroll animations (e.g., using AOS or Framer Motion) for elements like the hero banner, prize sections, and event cards, while ensuring performance stays within the 3-second page load requirement.</li>
+            <li><strong>Testing and bug fixing —</strong> Cross-browser test all pages on Chrome, Firefox, Safari, and Edge; report and resolve UI inconsistencies; and support the team during the UAT phase to ensure the site is stable and ready for launch.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 40px;">
+        <h1 style="font-size: 32px; font-weight: 900; text-transform: uppercase; margin-bottom: 5px;">Ready For Deployment?</h1>
+        <p style="font-family: var(--font-serif); color: var(--val-muted); font-size: 16px; margin-bottom: 20px;">Roster spots are strictly limited. Lock in before the timer runs out.</p>
+        <a href="#" class="btn-apply"><span style="position: relative; z-index: 2;">Lock In Agent</span></a>
+        <p style="margin-top:20px; font-family: var(--font-mono); color:#555; font-size:11px; text-transform: uppercase;">
+          Comms: <a href="mailto:acm@northsouth.edu" style="color:var(--val-muted); text-decoration:none; border-bottom: 1px dotted #555;">acm@northsouth.edu</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  // Radianite Cube Particles Generator
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 15; i++) {
+    const cube = document.createElement('div');
+    cube.className = 'cube';
+    const size = Math.random() * 30 + 10; 
+    cube.style.cssText = `
+      left:${Math.random()*100}%;
+      width:${size}px;height:${size}px;
+      --dx:${(Math.random()-0.5)*150}px;
+      animation-duration:${Math.random()*8 + 7}s;
+      animation-delay:${Math.random()*5}s;
+    `;
+    container.appendChild(cube);
+  }
+</script>
+</body>
+</html> -->
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PROTOCOL: Technovation 3.0 — Web Team</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Inter:wght@400;500;600;700;900&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  /* Valorant Palette */
+  --val-red:    #ff4655;
+  --val-dark:   #0f1923;
+  --val-black:  #111111;
+  --val-light:  #ece8e1;
+  --val-grey:   #1f2326;
+  --val-muted:  #8b978f;
+  --radianite:  #00ffcc; 
+  
+  /* Blended Fonts */
+  --font-header: 'Trajan Pro', 'Cinzel', serif; /* Game of Thrones Headers */
+  --font-serif:  'Newsreader', 'Charter', Georgia, serif; /* Claude Reading Text */
+  --font-sans:   'Inter', system-ui, sans-serif; /* Claude UI Text */
+  --font-mono:   'JetBrains Mono', monospace; /* Tactical Code */
+}
+
+html { 
+  scroll-behavior: smooth; 
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--val-dark);
+  color: var(--val-light);
+  margin: 0;
+  overflow-x: hidden;
+}
+
+/* --- TACTICAL GRID BACKGROUND --- */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background-image: 
+    linear-gradient(rgba(236, 232, 225, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(236, 232, 225, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
+/* --- RADIANITE CUBE PARTICLES --- */
+.radianite-particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.cube {
+  position: absolute; bottom: -50px;
+  background: rgba(0, 255, 204, 0.1);
+  border: 1px solid rgba(0, 255, 204, 0.3);
+  box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
+  animation: float-up linear infinite; 
+}
+@keyframes float-up {
+  0%   { transform: translateX(0) translateY(0) scale(0.5) rotate(0deg); opacity: 0; }
+  20%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translateX(var(--dx)) translateY(-100vh) scale(1.5) rotate(360deg); opacity: 0; }
+}
+
+/* --- 2-PAGE SCROLL SNAP LAYOUT --- */
+.wrapper {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  position: relative;
+  z-index: 1;
+}
+
+.page-section {
+  min-height: 100vh;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  position: relative;
+}
+
+.container { max-width: 1200px; width: 100%; margin: 0 auto; }
+
+/* --- TYPOGRAPHY & HEADERS --- */
+h1, h2, h3, h4 { font-family: var(--font-header); }
+
+.hero { text-align: center; margin-bottom: 30px; }
+
+/* --- LOGO CONTAINER --- */
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0px; /* Space between the two logos */
+  margin-bottom: 20px;
+}
+.hero-logo {
+  height: 80px; /* Forces both logos to be exactly this tall */
+  width: auto;  /* Maintains their original aspect ratio/width */
+  object-fit: contain;
+  /* Optional: Add a slight glow or drop shadow if they are dark logos against the dark background */
+  filter: drop-shadow(0 0 10px rgba(255,255,255,0.1)); 
+}
+
+.scroll-tag {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.15em;
+  color: var(--val-red); margin-bottom: 10px; display: block;
+  text-transform: uppercase; font-weight: 700;
+}
+.hero h1 {
+  font-family: var(--font-header);
+  font-size: clamp(36px, 6vw, 72px); line-height: 1;
+  color: var(--val-light); margin-bottom: 20px;
+  font-weight: 900; letter-spacing: -0.04em; text-transform: uppercase;
+}
+.hero h1 em {
+  font-style: normal; color: var(--val-red);
+}
+.hero-lore {
+  font-family: var(--font-serif); font-size: 19px; color: #cbd5e1; 
+  max-width: 650px; margin: 0 auto; line-height: 1.5; font-weight: 400;
+}
+
+.section-title {
+  font-family: var(--font-header); font-size: 22px; letter-spacing: 0.1em; 
+  color: var(--val-light); text-transform: uppercase; font-weight: 700;
+  border-bottom: 2px solid var(--val-red);
+  padding-bottom: 8px; margin-bottom: 25px; display: inline-block;
+}
+
+/* --- CARDS & GRIDS --- */
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; width: 100%; align-items: start; }
+.grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; width: 100%; }
+
+.agent-card {
+  background: var(--val-grey);
+  padding: 25px 20px;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%);
+  border-left: 4px solid transparent;
+}
+.agent-card::before {
+  content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(45deg, transparent 95%, rgba(255, 70, 85, 0.2) 100%);
+  pointer-events: none; opacity: 0; transition: opacity 0.3s;
+}
+.agent-card:hover {
+  background: #2a2e33;
+  border-left: 4px solid var(--val-red);
+  transform: translateY(-5px);
+}
+.agent-card:hover::before { opacity: 1; }
+
+.role-class { font-family: var(--font-mono); font-size: 11px; color: var(--val-red); margin-bottom: 5px; text-transform: uppercase; }
+.role-name { font-family: var(--font-header); font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 10px; text-transform: uppercase; }
+.role-stack { font-size: 14px; color: var(--val-muted); line-height: 1.5; font-family: var(--font-serif); } 
+
+/* --- RESPONSIBILITIES & ELIGIBILITY LIST --- */
+.resp-list {
+  list-style: none;
+  width: 100%;
+  text-align: left;
+}
+.resp-list li {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  color: var(--val-light);
+  margin-bottom: 15px;
+  padding-left: 25px;
+  position: relative;
+  line-height: 1.5;
+}
+.resp-list li::before {
+  content: '■';
+  color: var(--val-red);
+  position: absolute;
+  left: 0;
+  top: 3px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.resp-list strong {
+  font-family: var(--font-sans);
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-right: 5px;
+}
+
+/* --- CTA BUTTON --- */
+.btn-apply {
+  display: inline-block;
+  background: var(--val-light); color: var(--val-dark);
+  font-family: var(--font-header); font-size: 18px; font-weight: 900;
+  padding: 16px 45px; text-decoration: none; text-transform: uppercase;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+  transition: all 0.3s ease; position: relative; margin-top: 10px;
+}
+.btn-apply::before {
+  content: ''; position: absolute; inset: 0; background: var(--val-red); z-index: -1;
+  transform: scaleY(0); transform-origin: bottom; transition: transform 0.3s ease;
+}
+.btn-apply:hover { color: var(--val-light); }
+.btn-apply:hover::before { transform: scaleY(1); }
+
+.scroll-indicator {
+  position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+  animation: float 2s infinite ease-in-out; color: var(--val-muted); font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
+}
+@keyframes float { 0%, 100% { transform: translate(-50%, 0); opacity: 0.5; } 50% { transform: translate(-50%, 8px); opacity: 1; } }
+
+</style>
+</head>
+<body>
+
+<div class="radianite-particles" id="particles"></div>
+
+<div class="wrapper">
+  
+  <section class="page-section">
+    <div class="container">
+      <div class="hero">
+        
+        <div class="logo-container">
+          <img src="/Users/nipunsaif/Downloads/nsu-logo.png" alt="NSU Logo" class="hero-logo" />
+          <img src="/Users/nipunsaif/Downloads/acm-logo.png" alt="ACM Logo" class="hero-logo" />
+        </div>
+
+        <span class="scroll-tag"><strong>NSU ACM Student Chapter</strong></span>
+        <h1>Call For<br/><em>Technovation 3.0<br/></em>Web Team</h1>
+        <p class="hero-lore">We are assembling an elite roster of Agents to build, design, and dominate the digital battlefield. Technovation 3.0 is calling — claim your role.</p>
+      </div>
+
+      <div style="text-align: center;"><h2 class="section-title">Available Positions</h2></div>
+      <div class="grid-4">
+        <div class="agent-card">
+          <div class="role-class">// Initiator</div>
+          <div class="role-name">Frontend Developer</div>
+          <div class="role-stack">Next.js · Tailwind CSS · Framer Motion</div>
+        </div>
+        <div class="agent-card">
+          <div class="role-class">// Controller</div>
+          <div class="role-name">Backend Developer</div>
+          <div class="role-stack">Node.js · Express · MySQL · APIs</div>
+        </div>
+        <div class="agent-card">
+          <div class="role-class">// Duelist</div>
+          <div class="role-name">Full-Stack Developer</div>
+          <div class="role-stack">End-to-end feature execution & fragging</div>
+        </div>
+        <div class="agent-card">
+          <div class="role-class">// Sentinel</div>
+          <div class="role-name">DevOps Engineer</div>
+          <div class="role-stack">VPS · SSL · CI/CD Pipelines</div>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-indicator">SCROLL TO APPLICATION ▼</div>
+  </section>
+
+  <section class="page-section">
+    <div class="container">
+      
+      <div class="grid-2">
+        <div>
+          <h2 class="section-title">Eligibility Criteria</h2>
+          <ul class="resp-list">
+            <li>Must be a current, active NSU ACM Student Chapter Member</li>
+            <li>Proficiency in at least one basic programming language — C/C++, Java, Python, or C#</li>
+            <li>Familiar with core Git commands (clone, push, pull, commit, branch, merge)</li>
+            <li>Experience with GitHub repository collaboration (pull requests, code reviews, branching workflow)</li>
+            <li><strong>Ability to Vibe Code —</strong> leveraging Prompt Engineering to work alongside AI tools (e.g., ChatGPT, Claude, Copilot) to accelerate development, debug smarter, and ship faster</li>
+          </ul>
+        </div>
+
+        <div>
+          <h2 class="section-title">Job Responsibilities</h2>
+          <ul class="resp-list">
+            <li><strong>Building and structuring web pages —</strong> Implement the HTML structure for all assigned pages (Landing, HackNSU, IUPC, Gaming, Hour of Code, and About Us) following the site architecture and navigation layout defined in the SRS.</li>
+            <li><strong>Responsive UI development —</strong> Write clean, mobile-first CSS using Tailwind to ensure the website renders consistently across all screen sizes from 320px to 1920px, covering desktop, tablet, and mobile devices.</li>
+            <li><strong>Integrating content and assets —</strong> Embed provided content such as event schedules, prize breakdowns, team photos, sponsor logos, and external links (PDFs, Google Forms) into the appropriate page sections once approved by the Project Lead.</li>
+            <li><strong>Implementing animations and visual effects —</strong> Apply lightweight scroll animations (e.g., using AOS or Framer Motion) for elements like the hero banner, prize sections, and event cards, while ensuring performance stays within the 3-second page load requirement.</li>
+            <li><strong>Testing and bug fixing —</strong> Cross-browser test all pages on Chrome, Firefox, Safari, and Edge; report and resolve UI inconsistencies; and support the team during the UAT phase to ensure the site is stable and ready for launch.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 40px;">
+        <h1 style="font-size: 32px; font-weight: 900; text-transform: uppercase; margin-bottom: 5px;">Ready For Deployment?</h1>
+        <p style="font-family: var(--font-serif); color: var(--val-muted); font-size: 16px; margin-bottom: 20px;">Application Deadline: 10 March, Sunday 11:59 PM.  . Lock in before the timer runs out.</p>
+        <a href="#" class="btn-apply"><span style="position: relative; z-index: 2;">Apply Now</span></a>
+        <p style="margin-top:20px; font-family: var(--font-mono); color:#555; font-size:11px; text-transform: uppercase;">
+          Email: <a href="mailto:acm.sc@northsouth.edu" style="color:var(--val-muted); text-decoration:none; border-bottom: 1px dotted #555;">acm.sc@northsouth.edu</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  // Radianite Cube Particles Generator
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 15; i++) {
+    const cube = document.createElement('div');
+    cube.className = 'cube';
+    const size = Math.random() * 30 + 10; 
+    cube.style.cssText = `
+      left:${Math.random()*100}%;
+      width:${size}px;height:${size}px;
+      --dx:${(Math.random()-0.5)*150}px;
+      animation-duration:${Math.random()*8 + 7}s;
+      animation-delay:${Math.random()*5}s;
+    `;
+    container.appendChild(cube);
+  }
+</script>
+</body>
+</html>
